@@ -5,9 +5,12 @@
     - name: apt update on ubuntu
       shell: 'apt update'
       when: ansible_facts['distribution']=="Debian"
+      #  or "when= ansible_os_family=="Debian"
+      
     - name: dnf update on aws
       shell: 'dnf update'
       when:  ansible_facts['distribution']=="RedHat"
+      #  or "when= ansible_os_family=="RedHat"
     - name: install lemp on ubuntu
       apt:
         name: "{{ item }}"
