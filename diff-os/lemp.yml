@@ -1,0 +1,65 @@
+- name: LEMP with different os
+  hosts: webserver
+  become: true
+  tasks:
+    - name: apt update on ubuntu
+      shell: 'apt update'
+      when: ansible_facts['distribution']=="Debian"
+    - name: dnf update on aws
+      shell: 'dnf update'
+      when:  ansible_facts['distribution']=="RedHat"
+    - name: install lemp on ubuntu
+      apt:
+        name: "{{ item }}"
+        state: present
+      when: ansible_facts['distribution']=="Debian"
+      with_items:
+        - nginx
+        - php
+        - php8.3-fpm
+        - mariadb-server
+    - name: start lemp on ubuntu
+      service:
+        name: "{{ item }}"
+        state: started
+      when: ansible_facts['distribution']=="Debian"
+      with_items:
+        - nginx
+        - php8.3-fpm
+        - mariadb
+    - name: restat lemp on ubuntu
+      service:
+        name: "{{ item }}"
+        state: restarted
+      when: ansible_facts['distribution']=="Debian"
+      with_items:
+        - nginx
+        - php8.3-fpm
+        - mariadb
+    - name: install lemp on a-linux
+      dnf:
+        name: "{{ item }}"
+        state: present
+      when: ansible_facts['distribution']=="RedHat"
+      with_items:
+        - nginx
+        - php
+        - mariadb105-server
+    - name: start lemp on a-linux
+      service:
+        name: "{{ item }}"
+        state: started
+      when: ansible_facts['distribution']=="RedHat"
+      with_items:
+        - nginx
+        - php-fpm
+        - mariadb
+    - name: restat lemp on ubuntu
+      service:
+        name: "{{ item }}"
+        state: restarted
+      when: ansible_facts['distribution']=="RedHat"
+      with_items:
+        - nginx
+        - php-fpm
+        - mariadb
