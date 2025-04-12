@@ -1,0 +1,15 @@
+- name: trycathc wala
+  hosts: localhost
+  become: true
+  connection: local
+  tasks:
+    - block:
+        - name: nginx install
+          dnf: name=nginx state=present
+        - debug: msg="debus msg"
+      rescue:
+        - name: nginx install
+          apt: name=nginx state=present
+        - debug: msg="rescue debug"
+      always:
+        - debug: msg="final debug"
