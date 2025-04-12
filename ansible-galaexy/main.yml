@@ -1,1 +1,8 @@
-a
+- name: galaxy wala
+  hosts: localhost
+  become: true
+  connection: local
+  roles:
+   -  role: web_role
+   -  role: app_role
+   -  role: db-role
