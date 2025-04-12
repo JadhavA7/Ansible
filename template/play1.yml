@@ -1,10 +1,10 @@
-- name: myplay1
+- name: template
   hosts: localhost
   become: true
   connection: local
   vars:
-      m_port: 80
-      m_path: /var/www/html/myweb
+    my_port: 80
+    my_path: /var/www/html/myweb
   tasks:
     - name: nginx install
       apt: name=nginx state=present
@@ -12,9 +12,9 @@
       service: name=nginx state=started
     - name: create directory
       file: path=/var/www/html/myweb state=directory
-    - name: copy directory
+    - name: copy index.html
       copy: src=./index.html dest=/var/www/html/myweb
-    - name: copy configureation file
-      template: src=./mynginx.yml  dest=/etc/nginx/sites-enabled/default
-    - name: nginx reload
+    - name: copy myconfig.conf
+      template: src=./myconfi.conf dest=/etc/nginx/sites-enabled/default
+    - name: reload nginx
       service: name=nginx state=reloaded
