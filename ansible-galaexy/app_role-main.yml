@@ -1,0 +1,7 @@
+- name: php install
+     apt: name="{{ item }}" state=present
+     with_items:
+      - php
+      - php8.3-fpm
+   - name: php start
+     service: name=php8.3-fpm state=started
