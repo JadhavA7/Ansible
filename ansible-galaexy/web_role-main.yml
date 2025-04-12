@@ -1,0 +1,6 @@
+ - name: apache stop
+      service: name=apache2 state=stopped
+    - name: nginx install
+      apt: name=nginx state=present
+    - name: nginx start
+      service: name=nginx state=started
