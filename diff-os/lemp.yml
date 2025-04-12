@@ -1,68 +1,56 @@
-- name: LEMP with different os
+- name: LEMP on differnet os
   hosts: webserver
   become: true
   tasks:
-    - name: apt update on ubuntu
-      shell: 'apt update'
-      when: ansible_facts['distribution']=="Debian"
-      #  or "when= ansible_os_family=="Debian"
-      
-    - name: dnf update on aws
-      shell: 'dnf update'
-      when:  ansible_facts['distribution']=="RedHat"
-      #  or "when= ansible_os_family=="RedHat"
-    - name: install lemp on ubuntu
-      apt:
-        name: "{{ item }}"
-        state: present
-      when: ansible_facts['distribution']=="Debian"
-      with_items:
-        - nginx
-        - php
-        - php8.3-fpm
-        - mariadb-server
-    - name: start lemp on ubuntu
-      service:
-        name: "{{ item }}"
-        state: started
-      when: ansible_facts['distribution']=="Debian"
-      with_items:
-        - nginx
-        - php8.3-fpm
-        - mariadb
-    - name: restat lemp on ubuntu
-      service:
-        name: "{{ item }}"
-        state: restarted
-      when: ansible_facts['distribution']=="Debian"
-      with_items:
-        - nginx
-        - php8.3-fpm
-        - mariadb
-    - name: install lemp on a-linux
-      dnf:
-        name: "{{ item }}"
-        state: present
-      when: ansible_facts['distribution']=="RedHat"
-      with_items:
-        - nginx
-        - php
-        - mariadb105-server
-    - name: start lemp on a-linux
-      service:
-        name: "{{ item }}"
-        state: started
-      when: ansible_facts['distribution']=="RedHat"
-      with_items:
-        - nginx
-        - php-fpm
-        - mariadb
-    - name: restat lemp on ubuntu
-      service:
-        name: "{{ item }}"
-        state: restarted
-      when: ansible_facts['distribution']=="RedHat"
-      with_items:
-        - nginx
-        - php-fpm
-        - mariadb
+     - name: dnf update
+       dnf:
+         name: "*"
+         state: latest
+       when: ansible_os_family== "RedHat"
+     - name: install lemp on amazon
+       dnf:
+         name: "{{ item }}"
+         state: present
+       with_items:
+         - nginx
+         - php
+         - mariadb105-server
+       when: ansible_os_family== "RedHat"
+     - name: started services on amazon
+       service:
+         name: "{{ item }}"
+         state: started
+       with_items:
+         - nginx
+         - php-fpm
+         - mariadb
+       when: ansible_os_family== "RedHat"
+     - name: atp update
+       apt:
+         name: "*"
+         state: latest
+       when: ansible_os_family== "Debian"
+     - name: install services
+       apt:
+         name: "{{ item }}"
+         state: present
+       with_items:
+         - nginx
+         - php
+         - php8.3-fpm
+         - mariadb-server
+       when: ansible_os_family== "Debian"
+     - name: stop apache
+       service:
+         name: apache2
+         state: stopped
+       when: ansible_os_family== "Debian"
+     - name: start services
+       service:
+         name: "{{ item }}"
+         state: started
+       with_items:
+         - nginx
+         - php8.3-fpm
+         - mariadb
+       when: ansible_os_family== "Debian"
