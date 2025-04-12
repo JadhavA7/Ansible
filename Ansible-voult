@@ -1,2 +1,2 @@
-ansible-voult encrypt file-name
-ansible-voult decrypt file-name
+ansible-vault encrypt file-name
+ansible-vault decrypt file-name
